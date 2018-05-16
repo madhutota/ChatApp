@@ -21,7 +21,7 @@
         android:layout_toLeftOf="@+id/ivUserChat"
         android:layout_toStartOf="@+id/ivUserChat"
         android:id="@+id/contentMessageChat"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:cmv_arrowGravity="end"
         app:cmv_arrowMargin="3dp"

@@ -5,9 +5,10 @@ import com.dev.chatapp.UserModel;
 public class ChatModel {
 
     private String id;
-    private UserModel userModel;
     private String message;
     private String timeStamp;
+
+    private UserModel userModel;
     private FileModel file;
     private MapModel mapModel;
 

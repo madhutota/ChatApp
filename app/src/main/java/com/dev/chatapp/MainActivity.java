@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.dev.chatapp.activities.ChatActivity;
 import com.dev.chatapp.activities.SplashActivity;
+import com.dev.chatapp.utils.Constants;
+import com.dev.chatapp.utils.Preference;
 import com.dev.chatapp.utils.Utility;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,6 +36,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -43,16 +46,19 @@ public class MainActivity extends AppCompatActivity {
 
     private DatabaseReference mFriendsDatabase;
     private DatabaseReference mUsersDatabase;
+    private DatabaseReference mUserDatabaseReference;
 
     private FirebaseAuth mAuth;
 
     private String mCurrent_user_id;
     private DatabaseReference mUserRef;
     FirebaseUser currentUser;
+    String LoginUSer = "";
+    String mCurrentUserProfileImage = "";
 
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    @Override
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -61,18 +67,49 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void inITUI() {
         mAuth = FirebaseAuth.getInstance();
-        mCurrent_user_id = mAuth.getCurrentUser().getUid();
+        mCurrent_user_id = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
         mUsersList = findViewById(R.id.recycler_view);
 
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         mUsersDatabase.keepSynced(true);
 
+        mUserDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrent_user_id);
+        mUserDatabaseReference.keepSynced(true);
+
+
         mUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
 
         mUsersList.setHasFixedSize(true);
         mUsersList.setLayoutManager(new LinearLayoutManager(this));
+
+        mUserDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                LoginUSer  = dataSnapshot.child("name").getValue().toString();
+                mCurrentUserProfileImage = dataSnapshot.child("image").getValue().toString();
+                // String status = dataSnapshot.child("status").getValue().toString();
+                String thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
+                if (!mCurrentUserProfileImage.equals("default")) {
+
+
+                }
+                Preference.setPrefStringData(MainActivity.this, Constants.LOGIN_USER,LoginUSer);
+                Preference.setPrefStringData(MainActivity.this, Constants.LOGIN_USER_PROFILE,mCurrentUserProfileImage);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
 
     }
 
@@ -107,6 +144,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
+                        final String userName = dataSnapshot.child("name").getValue().toString();
+
                         if (!user_id.equalsIgnoreCase(mCurrent_user_id)) {
                         }
 
@@ -126,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
                         Intent profileIntent = new Intent(MainActivity.this, ChatActivity.class);
                         profileIntent.putExtra("user_id", user_id);
+                        profileIntent.putExtra("user_name", userName);
                         startActivity(profileIntent);
 
                             }

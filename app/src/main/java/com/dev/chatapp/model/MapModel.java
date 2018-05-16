@@ -4,13 +4,17 @@ public class MapModel {
 
     private String latitude;
     private String longitude;
+    private String placeName;
+    private String address;
 
     public MapModel() {
     }
 
-    public MapModel(String latitude, String longitude) {
+    public MapModel(String latitude, String longitude, String placeName, String address) {
         this.latitude = latitude;
         this.longitude = longitude;
+        this.placeName = placeName;
+        this.address = address;
     }
 
     public String getLatitude() {
@@ -27,5 +31,21 @@ public class MapModel {
 
     public void setLongitude(String longitude) {
         this.longitude = longitude;
+    }
+
+    public String getPlaceName() {
+        return placeName;
+    }
+
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

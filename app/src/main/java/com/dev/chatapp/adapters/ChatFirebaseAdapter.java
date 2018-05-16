@@ -1,6 +1,7 @@
 package com.dev.chatapp.adapters;
 
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -13,8 +14,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dev.chatapp.R;
+import com.dev.chatapp.activities.ChatActivity;
 import com.dev.chatapp.interfaces.ClickListenerChatFirebase;
 import com.dev.chatapp.model.ChatModel;
+import com.dev.chatapp.model.MapModel;
 import com.dev.chatapp.utils.Utility;
 import com.dev.chatapp.views.CircleTransform;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -32,11 +35,13 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<ChatModel, Chat
     private static final int RIGHT_MSG_IMG = 2;
     private static final int LEFT_MSG_IMG = 3;
     private String nameUser;
+    ChatActivity chatActivity;
 
-    public ChatFirebaseAdapter(DatabaseReference ref, String nameUser, ClickListenerChatFirebase mClickListenerChatFirebase) {
+    public ChatFirebaseAdapter(DatabaseReference ref, String nameUser, ClickListenerChatFirebase mClickListenerChatFirebase, ChatActivity chatActivity) {
         super(ChatModel.class, R.layout.item_message_left, ChatFirebaseAdapter.ChatViewHolder.class, ref);
         this.nameUser = nameUser;
         this.mClickListenerChatFirebase = mClickListenerChatFirebase;
+        this.chatActivity = chatActivity;
     }
 
 
@@ -81,29 +86,20 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<ChatModel, Chat
         }
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull ChatFirebaseAdapter.ChatViewHolder holder, int position) {
-
-    }
 
     @Override
     protected void populateViewHolder(ChatViewHolder viewHolder, ChatModel model, int position) {
         viewHolder.setIvUser(model.getUserModel().getProfile_image());
         viewHolder.setTxtMessage(model.getMessage());
         viewHolder.setTvTimestamp(model.getTimeStamp());
-        viewHolder.tvIsLocation(View.GONE);
+        viewHolder.tvIsLocation(View.GONE, null);
         if (model.getFile() != null) {
-            viewHolder.tvIsLocation(View.GONE);
+            viewHolder.tvIsLocation(View.GONE, null);
             viewHolder.setIvChatPhoto(model.getFile().getUrl_file());
         } else if (model.getMapModel() != null) {
-            viewHolder.setIvChatPhoto(Utility.local(model.getMapModel().getLatitude(),model.getMapModel().getLongitude()));
-            viewHolder.tvIsLocation(View.VISIBLE);
+            viewHolder.setIvChatPhoto(Utility.local(model.getMapModel().getLatitude(), model.getMapModel().getLongitude()));
+            viewHolder.tvIsLocation(View.VISIBLE, model.getMapModel());
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return 0;
     }
 
     public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -140,10 +136,13 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<ChatModel, Chat
 
         public void setIvUser(String urlPhotoUser) {
             if (ivUser == null) return;
+            if (urlPhotoUser != null) {
+                Picasso.with(ivUser.getContext()).
+                        load(urlPhotoUser).centerCrop().resize(40, 40)
+                        .placeholder(R.drawable.default_avatar).into(ivUser);
+            }
 
-            Picasso.with(ivUser.getContext()).
-                    load(urlPhotoUser).centerCrop().resize(40,40)
-                    .placeholder(R.drawable.default_avatar).into(ivUser);
+
 
 
 
@@ -160,15 +159,19 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<ChatModel, Chat
             if (ivChatPhoto == null) return;
 
 
-            Picasso.with(ivChatPhoto.getContext()).load(url).centerCrop().resize(100,100)
+            Picasso.with(ivChatPhoto.getContext()).load(url).centerCrop().resize(100, 100)
                     .placeholder(R.drawable.default_avatar).into(ivChatPhoto);
 
             ivChatPhoto.setOnClickListener(this);
         }
 
-        public void tvIsLocation(int visible) {
+        public void tvIsLocation(int visible, MapModel mapModel) {
             if (tvLocation == null) return;
             tvLocation.setVisibility(visible);
+            if (mapModel != null) {
+                tvLocation.setText(chatActivity.getResources().getString(R.string.address_text, mapModel.getPlaceName(), mapModel.getAddress(),
+                        System.currentTimeMillis()));
+            }
         }
     }
 

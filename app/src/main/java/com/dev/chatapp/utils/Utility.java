@@ -12,8 +12,7 @@ import com.dev.chatapp.MainActivity;
 
 public class Utility {
 
-    public static final String URL_STORAGE_REFERENCE = "\n" +
-            "gs://chatapp-7ba3b.appspot.com";
+    public static final String URL_STORAGE_REFERENCE = "gs://chatapp-7ba3b.appspot.com";
     public static final String FOLDER_STORAGE_IMG = "images";
 
 
@@ -46,6 +45,6 @@ public class Utility {
     }
 
     public static String local(String latitudeFinal,String longitudeFinal){
-        return "https://maps.googleapis.com/maps/api/staticmap?center="+latitudeFinal+","+longitudeFinal+"&zoom=18&size=280x280&markers=color:red|"+latitudeFinal+","+longitudeFinal;
+        return "https://maps.googleapis.com/maps/api/staticmap?cirle="+latitudeFinal+","+longitudeFinal+"&zoom=18&size=280x280&markers=color:red|"+latitudeFinal+","+longitudeFinal;
     }
 }

@@ -12,7 +12,7 @@ public class UserModel {
     public UserModel() {
     }
 
-    public UserModel(String id, String name) {
+    public UserModel(String id, String name,String profile_image) {
         this.id = id;
         this.name = name;
         this.profile_image = profile_image;

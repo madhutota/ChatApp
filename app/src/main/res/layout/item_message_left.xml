@@ -18,17 +18,17 @@
 
     <me.himanshusoni.chatmessageview.ChatMessageView
         android:id="@+id/contentMessageChat"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/ivUserChat"
+        android:layout_toRightOf="@+id/ivUserChat"
         app:cmv_arrowGravity="end"
         app:cmv_arrowPosition="left"
         app:cmv_backgroundColor="#fff"
         app:cmv_backgroundColorPressed="#FFBABABA"
         app:cmv_cornerRadius="3dp"
-        app:cmv_showArrow="true"
-        android:layout_toRightOf="@+id/ivUserChat">
+        app:cmv_showArrow="true">
 
         <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
             android:id="@+id/txtMessage"
@@ -48,9 +48,9 @@
         android:layout_below="@+id/contentMessageChat"
         android:layout_marginLeft="10dp"
         android:layout_toEndOf="@+id/ivUserChat"
+        android:layout_toRightOf="@+id/ivUserChat"
         android:paddingLeft="10dp"
         android:paddingTop="6dp"
         android:text="22/06/2016"
-        android:textSize="10sp"
-        android:layout_toRightOf="@+id/ivUserChat" />
+        android:textSize="10sp" />
 </RelativeLayout>

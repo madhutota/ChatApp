@@ -34,5 +34,8 @@
     <string name="select_picture_title">Please Select Picture</string>
     <string name="todo">TODO</string>
 
+    <string name="address_text">"Name: %1$s \n Address: %2$s \n Timestamp: %3$tr"</string>
+    <string name="_22_06_2016">22/06/2016</string>
+
 
 </resources>
